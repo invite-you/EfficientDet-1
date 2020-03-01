@@ -75,6 +75,9 @@ def _read_quadrangle_annotations(csv_reader, classes, detect_text=False):
     result = OrderedDict()
     for line, row in enumerate(csv_reader, 1):
         try:
+            print(row)
+            print(classes)
+            print(detect_text)
             img_file, x1, y1, x2, y2, x3, y3, x4, y4, class_name = row[:10]
             if img_file not in result:
                 result[img_file] = []
