@@ -215,16 +215,14 @@ class CSVGenerator(Generator):
             self.labels[value] = key
 
         # csv with img_path, x1, y1, x2, y2, x3, y3, x4, y4, class_name
-        try:
-            with _open_for_csv(csv_data_file) as file:
-                # {'img_path1':[{'x1':xx,'y1':xx,'x2':xx,'y2':xx,'x3':xx,'y3':xx,'x4':xx,'y4':xx, 'class':xx}...],...}
-                if self.detect_quadrangle:
-                    self.image_data = _read_quadrangle_annotations(csv.reader(file, delimiter=','), self.classes,
-                                                                   self.detect_text)
-                else:
-                    self.image_data = _read_annotations(csv.reader(file, delimiter=','), self.classes)
-        except ValueError as e:
-            raise_from(ValueError('invalid CSV annotations file: {}: {}'.format(csv_data_file, e)), None)
+        with _open_for_csv(csv_data_file) as file:
+            # {'img_path1':[{'x1':xx,'y1':xx,'x2':xx,'y2':xx,'x3':xx,'y3':xx,'x4':xx,'y4':xx, 'class':xx}...],...}
+            if self.detect_quadrangle:
+                self.image_data = _read_quadrangle_annotations(csv.reader(file, delimiter=','), self.classes,
+                                                               self.detect_text)
+            else:
+                self.image_data = _read_annotations(csv.reader(file, delimiter=','), self.classes)
+
         self.image_names = list(self.image_data.keys())
 
         super(CSVGenerator, self).__init__(detect_text=detect_text, detect_quadrangle=detect_quadrangle, **kwargs)
@@ -275,9 +273,10 @@ class CSVGenerator(Generator):
         """
         Compute the aspect ratio for an image with image_index.
         """
+        return 1024/1024
         # PIL is fast for metadata
-        image = Image.open(self.image_path(image_index))
-        return float(image.width) / float(image.height)
+        # image = Image.open(self.image_path(image_index))
+        # return float(image.width) / float(image.height)
 
     def load_image(self, image_index):
         """
